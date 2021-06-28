@@ -26,9 +26,9 @@ class LowesApi {
 	}
 
 	public function fetchProductPrice($itemId=null){
-		$url = 'http://lwssvcs.lowes.com/CatalogServices/product/keyword/v2_0?keyword='.$itemId.'&offset=0&maxResults=1';
+		$url = 'https://lwssvcs.lowes.com/CatalogServices/product/productid/'.$itemId.'/v1_0';
 		if(!is_null($this->storeId))
-			$url = 'http://lwssvcs.lowes.com/CatalogServices/product/keyword/v2_0?keyword='.$itemId.'&offset=0&maxResults=1&storeNumber='.$this->storeId.'&priceFlag=rangeBalance&showProdLocations=true&channelType=ANDROID&employee=false&rollUpVariants=true&showExpandedFields=1&showRefinements=true';
+			$url = 'https://lwssvcs.lowes.com/CatalogServices/product/productid/'.$itemId.'/v1_0?storeNumber='.$this->storeId.'&priceFlag=rangeBalance&employee=false';
 		$headers = [
 			'Connection: Keep-Alive',
 			'Authorization: Basic QW5kcm9pZFVzZXI6ZHdpYXA0aHE=',
@@ -43,6 +43,8 @@ class LowesApi {
 		$price = null;
 		if(isset($json['productList'][0]['networkPrice']))
 			$price = (float)$json['productList'][0]['networkPrice'];
+		if(isset($json['productList'][0]['pricing']['price']['selling']))
+			$price = (float)$json['productList'][0]['pricing']['price']['selling'];
 		return $price;
 	}
 
